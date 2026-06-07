@@ -15,22 +15,11 @@
   justify-content: space-between;
   flex-wrap: wrap;
 }
-.oc-log-title {
-  font-weight: 700;
-  font-size: 18px;
-}
-.oc-log-subtitle {
-  opacity: 0.72;
-  font-size: 13px;
-  margin-top: 4px;
-}
-.oc-log-form {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
+.oc-log-title { font-weight: 700; font-size: 18px; }
+.oc-log-subtitle { opacity: 0.72; font-size: 13px; margin-top: 4px; }
+.oc-log-form { display: flex; gap: 8px; flex-wrap: wrap; }
 .oc-log-form input {
-  min-width: 230px;
+  min-width: 260px;
   padding: 9px 11px;
   border-radius: 10px;
   border: 1px solid rgba(0, 255, 255, 0.3);
@@ -48,20 +37,9 @@
   text-decoration: none;
   cursor: pointer;
 }
-.oc-log-form button:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-}
-.oc-log-status {
-  margin: 12px 0;
-  font-size: 13px;
-  opacity: 0.86;
-}
-.oc-log-links {
-  display: grid;
-  gap: 10px;
-  margin: 10px 0;
-}
+.oc-log-form button:disabled { opacity: 0.45; cursor: not-allowed; }
+.oc-log-status { margin: 12px 0; font-size: 13px; opacity: 0.86; }
+.oc-log-links { display: grid; gap: 10px; margin: 10px 0; }
 .oc-wechat-link {
   display: flex;
   gap: 10px;
@@ -85,13 +63,8 @@
   font-size: 12px;
   line-height: 1.45;
 }
-.oc-wechat-qr {
-  max-height: 360px;
-}
-.oc-log-output {
-  max-height: 520px;
-  min-height: 260px;
-}
+.oc-wechat-qr { max-height: 360px; }
+.oc-log-output { max-height: 520px; min-height: 260px; }
 @media (max-width: 720px) {
   .oc-log-form, .oc-log-form input, .oc-log-form button { width: 100%; }
 }

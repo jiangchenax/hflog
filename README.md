@@ -1,115 +1,89 @@
-# HF Space Manager
+# hflog OpenClaw Logs Fix v2
 
-HuggingFace Spaces 监控与管理面板。实时查看实例状态、资源占用，支持一键重启/重建、定时重启和保活功能。
+这个包修复“部署后管理页面没有 log”的问题。
 
-![preview](preview/已登录.png)
+## 你现在仓库里的主要问题
 
-## 功能
+1. `server.openclaw-logs.js` 文件存在，但 `server.js` 没有 `require('./server.openclaw-logs')`，也没有 `app.use(openclawLogs(...))`。
+2. `public/openclaw-logs-panel.js` 文件存在，但 `public/index.html` 没有加载 CSS/JS，也没有 `<div data-openclaw-logs>` 容器。
+3. 原安装脚本如果把日志路由挂在 `app.get('*')` 后面，`/api/openclaw/*` 会被前端 catch-all 吃掉，返回 `index.html`，所以接口不可用。
+4. 原日志模块只读 `HF_TOKEN`，但你的管理器主要使用 `HF_USER="username:token"`。v2 已支持 `HF_USER`。
+5. 原前端用 `EventSource`，不能发送 `Authorization` header。v2 改成 `fetch` 流式读取，可以携带登录 token。
 
-- 📊 **实时监控** - CPU、内存、网络流量实时图表
-- 🔄 **实例管理** - 重启、重建操作
-- ⏰ **定时重启** - 按小时间隔自动重启
-- 💓 **保活功能** - 防止 Space 休眠（全局/单独配置）
-- 👥 **多用户支持** - 同时监控多个 HF 账户
-- 🔐 **权限控制** - 未登录仅可查看，登录后可操作
-- 🌓 **主题切换** - 浅色/深色/跟随系统
-- 📡 **外部 API** - RESTful 接口供第三方调用
+## 安装
 
-## 快速开始
-
-### Docker（推荐）
+在仓库根目录执行：
 
 ```bash
-docker run -d -p 8080:8080 \
-  -e HF_USER="username:hf_token" \
-  -e USER_NAME="admin" \
-  -e USER_PASSWORD="your_password" \
-  -v ./data:/app/data \
-  --name hf-manager \
-  ghcr.io/shizuku-yume/hf-space-manager:latest
+unzip hflog-openclaw-log-fix-v2.zip
+cp -r hflog-openclaw-log-fix-v2/* .
+bash install-hflog-openclaw-logs.sh .
 ```
 
-### Docker Compose
-
-```yaml
-services:
-  hf-manager:
-    image: ghcr.io/shizuku-yume/hf-space-manager:latest
-    ports:
-      - "8080:8080"
-    environment:
-      - HF_USER=user1:token1,user2:token2
-      - USER_NAME=admin
-      - USER_PASSWORD=your_password
-    volumes:
-      - ./data:/app/data
-    restart: unless-stopped
-```
-
-### 手动部署
+提交并部署：
 
 ```bash
-git clone https://github.com/Shizuku-Yume/hf-space-manager.git
-cd hf-space-manager
-npm install
-HF_USER="username:token" npm start
+git add .
+git commit -m "fix openclaw hf logs panel"
+git push
 ```
 
 ## 环境变量
 
-| 变量 | 说明 | 默认值 |
-|------|------|--------|
-| `HF_USER` | HF用户和Token，格式 `user:token`，多个用逗号分隔 | *必填* |
-| `USER_NAME` | 登录用户名 | `admin` |
-| `USER_PASSWORD` | 登录密码 | `password` |
-| `API_KEY` | 外部API密钥 | - |
-| `PORT` | 端口 | `8080` |
-| `SHOW_PRIVATE` | 未登录时显示私有实例 | `false` |
-| `LOG_LEVEL` | 日志级别 (`error`/`warn`/`info`/`debug`) | `info` |
-| `DATA_DIR` | 数据存储目录 | `./data` |
-| `RATE_LIMIT_MAX` | 每IP每分钟请求限制 | `100` |
-
-## API
-
-### 内部接口
-
-| 端点 | 方法 | 说明 |
-|------|------|------|
-| `/health` | GET | 健康检查 |
-| `/api/proxy/spaces` | GET | 获取实例列表 |
-| `/api/proxy/restart/:repoId` | POST | 重启实例 |
-| `/api/proxy/rebuild/:repoId` | POST | 重建实例 |
-| `/api/schedule/restart/:repoId` | GET/POST | 定时重启配置 |
-| `/api/keepalive/:repoId` | GET/POST | 单实例保活配置 |
-| `/api/keepalive-global` | GET/POST | 全局保活配置 |
-
-### 外部接口
-
-需要 `Authorization: Bearer <API_KEY>` 认证。
-
-| 端点 | 方法 | 说明 |
-|------|------|------|
-| `/api/v1/info/:token` | GET | 获取用户实例列表 |
-| `/api/v1/info/:token/:spaceId` | GET | 获取实例详情 |
-| `/api/v1/action/:token/:spaceId/restart` | POST | 重启 |
-| `/api/v1/action/:token/:spaceId/rebuild` | POST | 重建 |
-
-## 健康检查
+一个 Hugging Face 账号管理多个 Space 实例时：
 
 ```bash
-curl http://localhost:8080/health
+HF_USER="your_hf_username:hf_xxx"
 ```
+
+也可以用：
+
+```bash
+HF_TOKEN="hf_xxx"
+```
+
+## 测试
+
+部署后打开：
+
+```text
+/api/openclaw/health
+```
+
+应该返回：
 
 ```json
-{
-  "status": "healthy",
-  "uptime": 3600,
-  "memory": { "heapUsed": "45MB", "rss": "80MB" },
-  "cache": { "spacesCount": 10 },
-  "scheduledTasks": { "restarts": 2, "keepAlives": 3 }
-}
+{"ok":true,"mounted":true,...}
 ```
 
-## License
+然后打开：
 
-MIT
+```text
+/openclaw-logs.html
+```
+
+输入 Space：
+
+```text
+owner/space
+```
+
+例如：
+
+```text
+mistaxx/claw
+```
+
+如果 OpenClaw 正在输出微信扫码日志，页面会自动显示二维码文本和 `https://liteapp.weixin.qq.com/q/...` 链接。
+
+## 管理页嵌入
+
+安装脚本会自动向 `public/index.html` 注入：
+
+```html
+<link rel="stylesheet" href="/openclaw-logs-panel.css">
+<div data-openclaw-logs></div>
+<script src="/openclaw-logs-panel.js"></script>
+```
+
+你也可以把 `<div data-openclaw-logs></div>` 移动到每个 Space 卡片附近。

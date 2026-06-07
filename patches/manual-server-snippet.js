@@ -1,8 +1,12 @@
-// Add near the top of server.js:
+// 放到 server.js 里 const app = express(); 后面：
 const openclawLogs = require('./server.openclaw-logs');
 
-// Add after app is created and before app.listen(...):
+// 必须放到 app.get('*', ...) catch-all 前面：
 app.use(openclawLogs({
-  requireLogin: typeof requireLogin === 'function' ? requireLogin : undefined,
-  sessionTokens: typeof sessionTokens !== 'undefined' ? sessionTokens : undefined
+  requireLogin: typeof authenticateToken === 'function'
+    ? authenticateToken
+    : (typeof requireLogin === 'function' ? requireLogin : undefined),
+  sessions: typeof sessions !== 'undefined' ? sessions : undefined,
+  sessionTokens: typeof sessionTokens !== 'undefined' ? sessionTokens : undefined,
+  userTokenMapping: typeof userTokenMapping !== 'undefined' ? userTokenMapping : undefined
 }));
