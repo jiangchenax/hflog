@@ -4,6 +4,7 @@ const fs = require('fs');
 const axios = require('axios');
 const crypto = require('crypto');
 const app = express();
+const openclawLogs = require('./server.openclaw-logs');
 const port = process.env.PORT || 8080;
 
 // ==================== 日志系统 ====================
@@ -1092,6 +1093,22 @@ app.get('/health', (req, res) => {
     timestamp: new Date().toISOString()
   });
 });
+
+// ==================== OpenClaw Hugging Face Logs ====================
+// 必须放在 app.get('*') 前面，否则 /api/openclaw/... 会被前端兜底页面吞掉。
+app.use(openclawLogs({
+  requireLogin: typeof authenticateToken === 'function'
+    ? authenticateToken
+    : undefined,
+
+  sessions: typeof sessions !== 'undefined'
+    ? sessions
+    : undefined,
+
+  userTokenMapping: typeof userTokenMapping !== 'undefined'
+    ? userTokenMapping
+    : undefined
+}));
 
 // 处理其他请求，重定向到 index.html
 app.get('*', (req, res) => {
