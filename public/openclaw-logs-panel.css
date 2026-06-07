@@ -1,0 +1,97 @@
+.oc-log-panel {
+  border: 1px solid rgba(0, 255, 255, 0.25);
+  border-radius: 14px;
+  padding: 16px;
+  margin: 16px 0;
+  background: rgba(3, 10, 22, 0.86);
+  color: #e8fbff;
+  box-shadow: 0 0 24px rgba(0, 255, 255, 0.08);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+.oc-log-head {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.oc-log-title {
+  font-weight: 700;
+  font-size: 18px;
+}
+.oc-log-subtitle {
+  opacity: 0.72;
+  font-size: 13px;
+  margin-top: 4px;
+}
+.oc-log-form {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.oc-log-form input {
+  min-width: 230px;
+  padding: 9px 11px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 255, 255, 0.3);
+  background: rgba(0, 0, 0, 0.36);
+  color: #e8fbff;
+}
+.oc-log-form button,
+.oc-wechat-link button,
+.oc-wechat-link a {
+  border: 1px solid rgba(0, 255, 255, 0.4);
+  border-radius: 10px;
+  padding: 9px 12px;
+  background: rgba(0, 255, 255, 0.1);
+  color: #dffcff;
+  text-decoration: none;
+  cursor: pointer;
+}
+.oc-log-form button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.oc-log-status {
+  margin: 12px 0;
+  font-size: 13px;
+  opacity: 0.86;
+}
+.oc-log-links {
+  display: grid;
+  gap: 10px;
+  margin: 10px 0;
+}
+.oc-wechat-link {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 10px;
+  border-radius: 12px;
+  background: rgba(0, 255, 120, 0.08);
+  border: 1px solid rgba(0, 255, 120, 0.18);
+}
+.oc-wechat-qr,
+.oc-log-output {
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow: auto;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 255, 255, 0.18);
+  background: rgba(0, 0, 0, 0.38);
+  padding: 12px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.45;
+}
+.oc-wechat-qr {
+  max-height: 360px;
+}
+.oc-log-output {
+  max-height: 520px;
+  min-height: 260px;
+}
+@media (max-width: 720px) {
+  .oc-log-form, .oc-log-form input, .oc-log-form button { width: 100%; }
+}
