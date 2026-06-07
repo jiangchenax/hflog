@@ -168,7 +168,15 @@ function writeSse(res, event, data) {
 }
 
 function hfLogsUrl(repoId) {
-  return `${HF_BASE}/api/spaces/${encodeURIComponent(repoId)}/logs/run`;
+  // Hugging Face 要求 /api/spaces/owner/name/logs/run
+  // 不能把整个 owner/name encode 成 owner%2Fname
+  const parts = String(repoId || '').split('/');
+  if (parts.length !== 2) throw new Error('Invalid repoId. Use owner/name.');
+
+  const owner = encodeURIComponent(parts[0]);
+  const name = encodeURIComponent(parts[1]);
+
+  return `${HF_BASE}/api/spaces/${owner}/${name}/logs/run`;
 }
 
 function createRouter(options = {}) {
