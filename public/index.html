@@ -834,6 +834,7 @@
       }
     }
   </style>
+  <link rel="stylesheet" href="/openclaw-logs-panel.css">
 </head>
 <body>
   <div class="container">
@@ -953,6 +954,11 @@
         刷新
       </button>
     </div>
+    
+   <!-- OpenClaw Logs Panel -->
+   <section style="margin: 16px 0;">
+  <div data-openclaw-logs></div>
+   </section>
 
     <!-- Instances -->
     <div id="servers"></div>
@@ -1865,5 +1871,6 @@
     setInterval(updateSummary, 5000);
     setInterval(refreshData, 300000);
   </script>
+  <script src="/openclaw-logs-panel.js"></script>
 </body>
 </html>
